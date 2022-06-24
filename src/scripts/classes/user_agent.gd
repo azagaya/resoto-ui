@@ -22,7 +22,9 @@ class Response:
 	var headers:Dictionary
 	var body:PoolByteArray
 	var transformed:Dictionary
-	
+	var chunk_reminder:PoolByteArray = []
+	var chunks : Array = []
+	var chunks_size : int = 0
 	func to_string() -> String:
 		if not body:
 			return ""
@@ -40,6 +42,8 @@ class Request:
 	var state_:int = states.CHECK_CONNECTION
 	var http_:HTTPClient
 	var response_:Response
+	
+	var ensamble_chunks = true
 	
 	var method:int
 	var path:String
@@ -119,6 +123,8 @@ class Request:
 					response_              = Response.new()
 					response_.status_code  = http_status
 					response_.headers      = http_.get_response_headers_as_dictionary()
+					response_.chunks = []
+					response_.chunks_size = 0
 					response_.body = PoolByteArray()
 					state_ = states.RESPONSE
 
@@ -131,12 +137,20 @@ class Request:
 						var chunk = http_.read_response_body_chunk()
 						if chunk.size() != 0:
 							emit_signal("pre_data", chunk, response_, self)
-							response_.body = response_.body + chunk
+							response_.chunks_size += chunk.size()
+							response_.chunks.append(chunk)
+							
 					else:
 						state_ = states.RESPONSE_READY
 						break
 						
 			states.RESPONSE_READY:
+				if ensamble_chunks:
+					response_.chunks_size += response_.body.size()
+					var aux = response_.body
+					for chunk in response_.chunks:
+						aux += chunk
+					response_.body = aux
 				emit_signal("pre_done", OK, response_)
 				emit_signal("done", OK, response_)
 				state_ = states.DONE
