@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://components/popups/popup_connect.gd" type="Script" id=1]
 [ext_resource path="res://assets/theme/dark_theme.tres" type="Theme" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://scripts/ui_content.gd" type="Script" id=8]
 [ext_resource path="res://scripts/ui_terminal_manager.gd" type="Script" id=9]
 [ext_resource path="res://components/toast/ToastManager.tscn" type="PackedScene" id=10]
+[ext_resource path="res://components/widgets/DashboardManager.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFontData" id=18]
 font_path = "res://assets/theme/Barlow-Light.ttf"
@@ -88,6 +89,8 @@ corner_detail = 1
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.161705, 0.119476, 0.175781, 1 )
+
+[sub_resource type="ButtonGroup" id=19]
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.105882, 0.0941176, 0.109804, 1 )
@@ -193,6 +196,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 17 )
 
+[node name="DashBoardManager" parent="Content/Content" instance=ExtResource( 11 )]
+visible = false
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_top = 40.0
+margin_right = 1910.0
+margin_bottom = 1070.0
+
 [node name="Config" parent="Content" instance=ExtResource( 3 )]
 visible = false
 
@@ -238,13 +250,13 @@ stretch_mode = 6
 
 [node name="Spacer" type="MarginContainer" parent="MenuBar/MenuContainer/Menu/Title"]
 margin_left = 74.0
-margin_right = 1813.0
+margin_right = 1781.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
 
 [node name="SideMenu" type="MarginContainer" parent="MenuBar/MenuContainer/Menu/Title"]
-margin_left = 1813.0
-margin_right = 1920.0
+margin_left = 1781.0
+margin_right = 1888.0
 margin_bottom = 32.0
 grow_horizontal = 0
 grow_vertical = 0
@@ -269,6 +281,53 @@ margin_left = 57.0
 margin_right = 99.0
 margin_bottom = 24.0
 text = "docs"
+
+[node name="SideMenu2" type="MarginContainer" parent="MenuBar/MenuContainer/Menu/Title"]
+margin_left = 1888.0
+margin_right = 1920.0
+margin_bottom = 32.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="Config" type="MenuButton" parent="MenuBar/MenuContainer/Menu/Title/SideMenu2"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+expand_icon = true
+items = [ "Configuration", null, 0, false, false, 0, 0, null, "", false, "Backup", null, 0, false, false, 1, 0, null, "", false, "Restore", null, 0, false, false, 2, 0, null, "", false, "Merge Graph", null, 0, false, false, 3, 0, null, "", false ]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MenuBar"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -87.0
+margin_right = 87.0
+margin_bottom = 32.0
+
+[node name="TerminalsButton" type="Button" parent="MenuBar/HBoxContainer"]
+margin_right = 75.0
+margin_bottom = 32.0
+toggle_mode = true
+group = SubResource( 19 )
+text = "Terminals"
+flat = true
+
+[node name="VSeparator" type="VSeparator" parent="MenuBar/HBoxContainer"]
+margin_left = 79.0
+margin_right = 83.0
+margin_bottom = 32.0
+
+[node name="DashboardsButton" type="Button" parent="MenuBar/HBoxContainer"]
+margin_left = 87.0
+margin_right = 174.0
+margin_bottom = 32.0
+toggle_mode = true
+group = SubResource( 19 )
+text = "Dashboards"
+flat = true
 
 [node name="Popups" type="CanvasLayer" parent="."]
 layer = 30
@@ -370,32 +429,14 @@ text = "Connect"
 
 [node name="ToastManager" parent="Popups" instance=ExtResource( 10 )]
 
-[node name="SideMenu2" type="MarginContainer" parent="MenuBar/MenuContainer/Menu/Title"]
-margin_left = 1888.0
-margin_right = 1920.0
-margin_bottom = 32.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
-
-[node name="Config" type="MenuButton" parent="MenuBar/MenuContainer/Menu/Title/SideMenu2"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 28.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 24, 24 )
-icon = ExtResource( 3 )
-expand_icon = true
-items = [ "Configuration", null, 0, false, false, 0, 0, null, "", false, "Backup", null, 0, false, false, 1, 0, null, "", false, "Restore", null, 0, false, false, 2, 0, null, "", false, "Merge Graph", null, 0, false, false, 3, 0, null, "", false ]
-
 [connection signal="reposition_active_tab_request" from="Content/Content/TerminalManager/TabsBar/TerminalTabs" to="Content/Content/TerminalManager" method="_on_TerminalTabs_reposition_active_tab_request"]
 [connection signal="tab_changed" from="Content/Content/TerminalManager/TabsBar/TerminalTabs" to="Content/Content/TerminalManager" method="_on_TerminalTabs_tab_changed"]
 [connection signal="tab_close" from="Content/Content/TerminalManager/TabsBar/TerminalTabs" to="Content/Content/TerminalManager" method="_on_TerminalTabs_tab_close"]
 [connection signal="pressed" from="Content/Content/TerminalManager/TabsBar/NewTabButton" to="Content/Content/TerminalManager" method="_on_NewTabButton_pressed"]
-[connection signal="close_config" from="Content/Config" to="Content" method="_on_Config_close_config"]
 [connection signal="pressed" from="MenuBar/MenuContainer/Menu/Title/SideMenu/HBoxContainer/ButtonConfig" to="Content" method="_on_ButtonConfig_pressed"]
 [connection signal="pressed" from="MenuBar/MenuContainer/Menu/Title/SideMenu/HBoxContainer/ButtonDocs" to="MenuBar/MenuContainer/Menu" method="_on_ButtonDocs_pressed"]
+[connection signal="toggled" from="MenuBar/HBoxContainer/TerminalsButton" to="Content" method="_on_TerminalsButton_toggled"]
+[connection signal="toggled" from="MenuBar/HBoxContainer/DashboardsButton" to="Content" method="_on_DashboardsButton_toggled"]
 [connection signal="about_to_show" from="Popups/ConnectPopup" to="Popups/ConnectPopup/Content/MarginContainer/Connect" method="_on_ConnectPopup_about_to_show"]
 [connection signal="text_entered" from="Popups/ConnectPopup/Content/MarginContainer/Connect/PSKLineEdit" to="Popups/ConnectPopup/Content/MarginContainer/Connect" method="_on_PSKLineEdit_text_entered"]
 [connection signal="pressed" from="Popups/ConnectPopup/Content/MarginContainer/Connect/ButtonConnect" to="Popups/ConnectPopup/Content/MarginContainer/Connect" method="_on_ButtonConnect_pressed"]
