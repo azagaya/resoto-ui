@@ -1,7 +1,6 @@
 # `ui`
 resoto UI prototype
 
-
 ## Table of contents
 
 * [Overview](#overview)
